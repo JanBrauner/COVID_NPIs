@@ -56,6 +56,11 @@ class Loader:
 
         self.ActiveCMs = None
 
+        self.NewConfirmed = None
+        self.NewDeaths = None
+
+        self.Population = self.rds.data.loc[self.Rs].Population.values
+
         self.update()
 
     def update(self):
@@ -81,12 +86,23 @@ class Loader:
 
         self.ActiveCMs = self.get_ActiveCMs(self.Ds)
 
+        def prep_diff(name):
+            val = prep(name, None)
+            val = np.concatenate(
+                [val[:, :1] * np.nan, val[:, 1:] - val[:, :-1]], axis=1
+            )
+            assert val.shape == (len(self.Rs), len(self.Ds))
+            return np.ma.masked_invalid(val)
+
+        self.NewConfirmed = prep_diff("Confirmed")
+        self.NewDeaths = prep_diff("Deaths")
+
     def get_ActiveCMs(self, dates):
         ActiveCMs = np.stack(
             [
                 self.features.loc[rc]
                 .astype(self.TheanoType)
-                .reindex(index=dates, method='pad')
+                .reindex(index=dates, method="pad")
                 .reindex(columns=self.CMs)
                 .values.T
                 for rc in self.Rs
