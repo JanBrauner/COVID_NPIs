@@ -59,7 +59,9 @@ class Loader:
         self.NewConfirmed = None
         self.NewDeaths = None
 
-        self.Population = self.rds.data.loc[self.Rs].Population.values
+        self.Population = self.rds.data.loc[self.Rs].Population.values.astype(
+            self.TheanoType
+        )
 
         self.update()
 
@@ -112,16 +114,19 @@ class Loader:
         # [region, CM, day] Which CMs are active, and to what extent
         return ActiveCMs
 
-    def print_stats(self):
+    def print_stats(self, active_cms=None):
         """Print data stats, plot graphs, ..."""
 
+        if active_cms is None:
+            active_cms = self.ActiveCMs
         print("\nCountermeasures                            min   .. mean  .. max")
         for i, cm in enumerate(self.CMs):
-            vals = np.array(self.features[cm])
+            vals = active_cms[:, i, :]
+            unique = sorted(set(vals.flatten()))
             print(
                 f"{i:2} {cm:42} {vals.min():.3f} .. {vals.mean():.3f}"
                 f" .. {vals.max():.3f}"
-                f"  {set(vals) if len(set(vals)) <= 4 else ''}"
+                f"  {unique if len(unique) <= 5 else ''}"
             )
 
     def create_delay_dist(self, delay_mean):
