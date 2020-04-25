@@ -37,7 +37,7 @@ class Loader:
         self.Confirmed = None
         self.ConfirmedCutoff = 10.0
         self.Deaths = None
-        self.DeathsCutoff = 10.0
+        self.DeathsCutoff = 5.0
         self.Active = None
         self.ActiveCutoff = 10.0
         self.Recovered = None

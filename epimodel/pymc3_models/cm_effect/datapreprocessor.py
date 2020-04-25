@@ -44,7 +44,7 @@ class DataPreprocessor(object):
         }
 
     def preprocess_data(self, data_base_path, countries, selected_features,
-                        selected_cm_set="countermeasures-model-0to1-split.csv"):
+                        selected_cm_set="countermeasures-model-0to1.csv"):
         # at the moment only features from the 0-1 countermeasures dataset
         Ds = pd.date_range(start=self.start_date, end=self.end_date, tz="utc")
         nDs = len(Ds)
@@ -55,10 +55,10 @@ class DataPreprocessor(object):
         self.johnhop_ds = johnhop_ds
 
         cm_set_dirs = [
-            "countermeasures-features.csv",
+#             "countermeasures-features.csv",
             "countermeasures-model-0to1.csv",
-            "countermeasures-selected-binary.csv",
-            "countermeasures-model-0to1-split.csv"
+#             "countermeasures-selected-binary.csv",
+#             "countermeasures-model-0to1-split.csv"
         ]
 
         cm_sets = {
